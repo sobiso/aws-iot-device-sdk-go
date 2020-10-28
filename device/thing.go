@@ -71,6 +71,7 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
 	mqttOpts.SetMaxReconnectInterval(1 * time.Second)
 	mqttOpts.SetClientID(string(thingName))
 	mqttOpts.SetTLSConfig(tlsConfig)
+	mqttOpts.SetCleanSession(false)
 
 	c := mqtt.NewClient(mqttOpts)
 	if token := c.Connect(); token.Wait() && token.Error() != nil {
