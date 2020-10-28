@@ -64,7 +64,7 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
 		return nil, err
 	}
 
-	awsServerURL := fmt.Sprintf("ssl://%s:8883/thing/test1", awsEndpoint)
+	awsServerURL := fmt.Sprintf("ssl://%s:8883/thing", awsEndpoint)
 	fmt.Printf("Connecting to %s\n", awsServerURL)
 	
 	mqttOpts := mqtt.NewClientOptions()
