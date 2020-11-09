@@ -46,35 +46,51 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
 		return nil ,fmt.Errorf("failed to load the certificates: %v", err)
 	}
 
-	certs := x509.NewCertPool()
+//	certs := x509.NewCertPool()
 
-	caPem, err := ioutil.ReadFile(keyPair.CACertificatePath)
-	if err != nil {
-		return nil, err
-	}
+//	caPem, err := ioutil.ReadFile(keyPair.CACertificatePath)
+//	if err != nil {
+//		return nil, err
+//	}
 
-	certs.AppendCertsFromPEM(caPem)
+//	certs.AppendCertsFromPEM(caPem)
 
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{tlsCert},
-		RootCAs:      certs,
-	}
+//	tlsConfig := &tls.Config{
+//		Certificates: []tls.Certificate{tlsCert},
+//		RootCAs:      certs,
+//	}
 
-	if err != nil {
-		return nil, err
-	}
+//	if err != nil {
+//		return nil, err
+//	}
 
-	awsServerURL := fmt.Sprintf("ssl://%s:8883/mqtt", awsEndpoint)
-	fmt.Printf("Connecting to %s\n", awsServerURL)
+//	awsServerURL := fmt.Sprintf("ssl://%s:8883/mqtt", awsEndpoint)
+//	fmt.Printf("Connecting to %s\n", awsServerURL)
+//	
+//	mqttOpts := mqtt.NewClientOptions()
+//	mqttOpts.AddBroker(awsServerURL)
+//	mqttOpts.SetMaxReconnectInterval(1 * time.Second)
+//	mqttOpts.SetClientID(string(thingName))
+//	mqttOpts.SetTLSConfig(tlsConfig)
+//	mqttOpts.SetCleanSession(false)
+
+	// AutoReconnect option is true by default
+ 	// CleanSession option is true by default
+ 	// KeepAlive option is 30 seconds by default
+ 	connOpts := mqtt.NewClientOptions() // This line is different, we use the constructor function instead of creating the instance ourselves.
+ 	connOpts.SetClientID(thingName)
+ 	connOpts.SetMaxReconnectInterval(1 * time.Second)
+ 	connOpts.SetTLSConfig(&tls.Config{Certificates: []tls.Certificate{tlsCert}})
+ 	connOpts.SetCleanSession(false)
+
+ 	port := 8883
+ 	path := "/mqtt"
+
+ 	brokerURL := fmt.Sprintf("tcps://%s:%d%s", awsEndpoint, port, path)
+ 	fmt.Printf("URL: %s\n", brokerURL)
+ 	connOpts.AddBroker(brokerURL)
 	
-	mqttOpts := mqtt.NewClientOptions()
-	mqttOpts.AddBroker(awsServerURL)
-	mqttOpts.SetMaxReconnectInterval(1 * time.Second)
-	mqttOpts.SetClientID(string(thingName))
-	mqttOpts.SetTLSConfig(tlsConfig)
-	mqttOpts.SetCleanSession(false)
-
-	c := mqtt.NewClient(mqttOpts)
+	c := mqtt.NewClient(connOpts)
 	if token := c.Connect(); token.Wait() && token.Error() != nil {
 		return nil, token.Error()
 	}
