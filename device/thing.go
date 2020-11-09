@@ -2,10 +2,10 @@ package device
 
 import (
 	"crypto/tls"
-	"crypto/x509"
+	//"crypto/x509"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 	"path"
 	"time"
 
