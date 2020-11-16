@@ -48,7 +48,9 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
 		return nil ,fmt.Errorf("failed to load the certificates: %v", err)
 	}
 
-	mqtt.DEBUG = log.New(os.Stdout, "[DEBUG] ", 0)
+	if os.Getenv("DEBUG") != "" {
+		mqtt.DEBUG = log.New(os.Stdout, "[DEBUG] ", 0)
+	}
 
 	// AutoReconnect option is true by default
  	// CleanSession option is true by default
