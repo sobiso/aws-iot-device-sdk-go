@@ -46,33 +46,7 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
 		return nil ,fmt.Errorf("failed to load the certificates: %v", err)
 	}
 
-//	certs := x509.NewCertPool()
-
-//	caPem, err := ioutil.ReadFile(keyPair.CACertificatePath)
-//	if err != nil {
-//		return nil, err
-//	}
-
-//	certs.AppendCertsFromPEM(caPem)
-
-//	tlsConfig := &tls.Config{
-//		Certificates: []tls.Certificate{tlsCert},
-//		RootCAs:      certs,
-//	}
-
-//	if err != nil {
-//		return nil, err
-//	}
-
-//	awsServerURL := fmt.Sprintf("ssl://%s:8883/mqtt", awsEndpoint)
-//	fmt.Printf("Connecting to %s\n", awsServerURL)
-//	
-//	mqttOpts := mqtt.NewClientOptions()
-//	mqttOpts.AddBroker(awsServerURL)
-//	mqttOpts.SetMaxReconnectInterval(1 * time.Second)
-//	mqttOpts.SetClientID(string(thingName))
-//	mqttOpts.SetTLSConfig(tlsConfig)
-//	mqttOpts.SetCleanSession(false)
+	mqtt.DEBUG = log.New(os.Stdout, "[DEBUG] ", 0)
 
 	// AutoReconnect option is true by default
  	// CleanSession option is true by default
