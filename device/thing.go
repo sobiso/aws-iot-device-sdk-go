@@ -65,7 +65,9 @@ func NewThing(keyPair KeyPair, awsEndpoint string, thingName ThingName) (*Thing,
  	path := "/mqtt"
 
  	brokerURL := fmt.Sprintf("tcps://%s:%d%s", awsEndpoint, port, path)
- 	fmt.Printf("URL: %s\n", brokerURL)
+	if os.Getenv("DEBUG") != "" {
+	 	log.Printf("CONNECTED URL: %s\n", brokerURL)
+	}
  	connOpts.AddBroker(brokerURL)
 	
 	c := mqtt.NewClient(connOpts)
